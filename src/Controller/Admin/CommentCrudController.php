@@ -53,8 +53,11 @@ class CommentCrudController extends AbstractCrudController
             ->setLabel('Photo');
             yield ChoiceField::new('state')->setChoices([
                 'Published' => CommentStateEnum::Published,
-                'Rejected' => CommentStateEnum::Submitted,
+                'Ham' => CommentStateEnum::Ham,
+                'Rejected' => CommentStateEnum::Rejected,
+                'Submitted' => CommentStateEnum::Submitted,
                 'Spam' => CommentStateEnum::Spam,
+                'PotentialSpam' => CommentStateEnum::PotentialSpam,
             ]);
         yield DateTimeField::new('createdAt')
             ->setRequired(false)
