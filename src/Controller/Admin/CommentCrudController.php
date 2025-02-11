@@ -3,11 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Comment;
+use App\Entity\Enum\CommentStateEnum;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -30,7 +32,7 @@ class CommentCrudController extends AbstractCrudController
             ->setSearchFields(['author', 'text', 'email'])
             ->setDefaultSort(['createdAt' => 'DESC']);
     }
-    
+
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
@@ -46,9 +48,14 @@ class CommentCrudController extends AbstractCrudController
             ->hideOnIndex();
         yield ImageField::new('photoFilename')
             ->setUploadDir('/public/uploads/photos')
-            ->setUploadedFileNamePattern(fn(UploadedFile $photo) => Comment::setFilename($photo))
+            ->setUploadedFileNamePattern(fn (UploadedFile $photo) => Comment::setFilename($photo))
             ->setBasePath('/uploads/photos')
             ->setLabel('Photo');
+            yield ChoiceField::new('state')->setChoices([
+                'Published' => CommentStateEnum::Published,
+                'Rejected' => CommentStateEnum::Submitted,
+                'Spam' => CommentStateEnum::Spam,
+            ]);
         yield DateTimeField::new('createdAt')
             ->setRequired(false)
             ->setTimezone('Europe/Paris')->onlyOnIndex();

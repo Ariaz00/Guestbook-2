@@ -2,13 +2,13 @@
 
 namespace App\Tests;
 
-use App\SpamChecker;
 use App\Entity\Comment;
-use PHPUnit\Framework\TestCase;
+use App\SpamChecker;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class SpamCheckerTest extends TestCase
 {
@@ -21,6 +21,7 @@ class SpamCheckerTest extends TestCase
         static::expectExceptionMessage('Unable to check for spam: invalid (Invalid key).');
         $checker->getSpamScore(comment: $comment, context: []);
     }
+
     #[DataProvider('provideComments')]
     public function testSpamScore(int $expectedScore, ResponseInterface $response, Comment $comment, array $context)
     {
@@ -40,7 +41,7 @@ class SpamCheckerTest extends TestCase
 
         $response = new MockResponse('true');
         yield 'spam' => [1, $response, $comment, []];
-        
+
         $response = new MockResponse('false');
         yield 'ham' => [0, $response, $comment, []];
     }

@@ -6,4 +6,16 @@ tests:
 	APP_ENV=test symfony console doctrine:fixtures:load -n
 	APP_ENV=dev symfony php bin/phpunit $(MAKECMDGOALS)
 
+phpstan:
+	APP_ENV=dev symfony php vendor/bin/phpstan analyse src --level 3 --memory-limit=-1
+
+php-cs-fixer:
+	APP_ENV=dev symfony php vendor/bin/php-cs-fixer fix
+php-cs-fixer-dry-run:
+	APP_ENV=dev symfony php vendor/bin/php-cs-fixer fix --dry-run
+
+connect-db:
+	docker compose exec database psql app app
+
 .PHONY: tests
+
